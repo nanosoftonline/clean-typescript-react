@@ -5,6 +5,7 @@ import { Todo } from "../../../Domain/Model/Todo";
 import { GetTodos } from "../../../Domain/UseCase/Todo/GetTodos";
 import { CreateTodo } from "../../../Domain/UseCase/Todo/CreateTodo";
 import { toast } from "react-toastify";
+import { MarkAsRead } from "../../../Domain/UseCase/Todo/MarkAsRead";
 
 export default function TodoListViewModel() {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -13,7 +14,10 @@ export default function TodoListViewModel() {
   const todosDataSourceImpl = new TodoAPIDataSourceImpl();
   const todosRepositoryImpl = new TodoRepositoryImpl(todosDataSourceImpl);
   const GetTodosUseCase = new GetTodos(todosRepositoryImpl);
+
   const CreateTodosUseCase = new CreateTodo(todosRepositoryImpl);
+  const MarkAsReadUseCase = new MarkAsRead(todosRepositoryImpl);
+
 
   function _resetValue() {
     setValue("");
@@ -36,6 +40,18 @@ export default function TodoListViewModel() {
     }
   }
 
+  async function toggleRead(id: string) {
+    const createdTodo = await MarkAsReadUseCase.invoke(id);
+    setTodos((prev) => [...prev.map((i) => {
+      const isToggled = i.id === id
+
+      return {
+        ...i,
+        isComplete: isToggled ? createdTodo: i.isComplete
+      }
+    }) ]);
+  }
+
   function onChangeValue(e: React.ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
     setValue(e.target.value);
@@ -45,6 +61,7 @@ export default function TodoListViewModel() {
     getTodos,
     onChangeValue,
     createTodo,
+    toggleRead,
     todos,
     value,
   };

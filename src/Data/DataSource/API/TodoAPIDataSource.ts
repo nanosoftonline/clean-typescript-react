@@ -29,4 +29,9 @@ export default class TodoAPIDataSourceImpl implements TodoDataSource {
       isComplete: item.is_completed,
     }));
   }
+
+  async markTodoAsRead(id: string) {
+    const item = this.db.updateByField(id, 'is_completed', 'toggle')
+    return item.is_completed
+  }
 }

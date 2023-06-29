@@ -10,7 +10,7 @@ import {
 import { toast } from "react-toastify";
 
 export default function TodoListView() {
-  const { getTodos, createTodo, onChangeValue, value, todos } = useViewModel();
+  const { getTodos, createTodo, onChangeValue, toggleRead, value, todos } = useViewModel();
 
   useEffect(() => {
     getTodos();
@@ -34,7 +34,7 @@ export default function TodoListView() {
         return (
           <ListItem key={i}>
             <ListItemIcon>
-              <Checkbox checked={todo.isComplete} />
+              <Checkbox checked={todo.isComplete} onChange={() => toggleRead(todo.id)}  />
             </ListItemIcon>
             <ListItemText primary={todo.title} />
           </ListItem>

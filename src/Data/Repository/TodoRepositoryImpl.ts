@@ -16,4 +16,8 @@ export class TodoRepositoryImpl implements TodoRepository {
     async getTodos(): Promise<Todo[]> {
         return this.dataSource.getTodos();
     }
+
+    async markAsRead(id: string) {
+        return this.dataSource.markTodoAsRead(id)
+    }
 }
