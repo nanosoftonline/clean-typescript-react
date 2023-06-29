@@ -6,6 +6,7 @@ import { GetTodos } from "../../../Domain/UseCase/Todo/GetTodos";
 import { CreateTodo } from "../../../Domain/UseCase/Todo/CreateTodo";
 import { toast } from "react-toastify";
 import { MarkAsRead } from "../../../Domain/UseCase/Todo/MarkAsRead";
+import { RemoveTodo } from "../../../Domain/UseCase/Todo/RemoveTodo";
 
 export default function TodoListViewModel() {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -13,10 +14,11 @@ export default function TodoListViewModel() {
 
   const todosDataSourceImpl = new TodoAPIDataSourceImpl();
   const todosRepositoryImpl = new TodoRepositoryImpl(todosDataSourceImpl);
-  const GetTodosUseCase = new GetTodos(todosRepositoryImpl);
 
+  const GetTodosUseCase = new GetTodos(todosRepositoryImpl);
   const CreateTodosUseCase = new CreateTodo(todosRepositoryImpl);
   const MarkAsReadUseCase = new MarkAsRead(todosRepositoryImpl);
+  const RemoveTodosUseCase = new RemoveTodo(todosRepositoryImpl);
 
 
   function _resetValue() {
@@ -41,7 +43,7 @@ export default function TodoListViewModel() {
   }
 
   async function toggleRead(id: string) {
-    const createdTodo = await MarkAsReadUseCase.invoke(id);
+    const createdTodo = await RemoveTodosUseCase.invoke(id);
     setTodos((prev) => [...prev.map((i) => {
       const isToggled = i.id === id
 
@@ -50,6 +52,16 @@ export default function TodoListViewModel() {
         isComplete: isToggled ? createdTodo: i.isComplete
       }
     }) ]);
+  }
+
+
+  async function removeTodo(id: string) {
+    const isRemoved = await RemoveTodosUseCase.invoke(id);
+   if(isRemoved) {
+    setTodos((prev) => {
+      return [...prev.filter(i => i.id !== id)];
+    })
+   }
   }
 
   function onChangeValue(e: React.ChangeEvent<HTMLInputElement>) {
@@ -62,6 +74,7 @@ export default function TodoListViewModel() {
     onChangeValue,
     createTodo,
     toggleRead,
+    removeTodo,
     todos,
     value,
   };

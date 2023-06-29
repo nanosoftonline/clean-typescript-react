@@ -9,15 +9,19 @@ export class TodoRepositoryImpl implements TodoRepository {
         this.dataSource = _datasource;
     }
 
-    async createTodo(value: string): Promise<Todo> {
+    async createTodo(value: string) {
         return this.dataSource.createTodo(value)
     }
 
-    async getTodos(): Promise<Todo[]> {
+    async getTodos() {
         return this.dataSource.getTodos();
     }
 
     async markAsRead(id: string) {
         return this.dataSource.markTodoAsRead(id)
+    }
+
+    async removeTodo(id: string) {
+        return this.dataSource.removeTodo(id)
     }
 }

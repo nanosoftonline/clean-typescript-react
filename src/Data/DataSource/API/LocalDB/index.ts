@@ -22,6 +22,18 @@ function db<T>(table: string) {
         return item as T;
       },
 
+      removeById(columnId: string) {
+        const idx = (this.getAll() as any[]).findIndex(
+          (i: { id: string }) => i.id === columnId
+        )!;
+
+        if (idx > -1) {
+          setTable(JSON.stringify([...(allLocal() as any[]).filter((i) => i.id !== columnId)]));
+          return true
+        }
+        return false
+      },
+
       // db('todos').create({aoskdoqwkd})
       create<T>(params: T) {
         const stringified = JSON.stringify([...allLocal(), params]);
@@ -59,6 +71,9 @@ function db<T>(table: string) {
     },
     getById(columnId: string) {
       return {} as T;
+    },
+    removeById(columnId: string) {
+      return false
     },
     create<T>(params: T) {},
     // update(id: string, newModel: Todo): Promise<Todo>
