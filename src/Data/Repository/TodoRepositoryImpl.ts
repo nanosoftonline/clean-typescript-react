@@ -9,6 +9,10 @@ export class TodoRepositoryImpl implements TodoRepository {
         this.dataSource = _datasource;
     }
 
+    async createTodo(value: string): Promise<Todo> {
+        return this.dataSource.createTodo(value)
+    }
+
     async getTodos(): Promise<Todo[]> {
         return this.dataSource.getTodos();
     }

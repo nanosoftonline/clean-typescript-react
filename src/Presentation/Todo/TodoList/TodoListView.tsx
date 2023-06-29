@@ -1,32 +1,45 @@
 import { useEffect } from "react";
 import useViewModel from "./TodoListViewModel";
 import {
-    List,
-    ListItem,
-    ListItemIcon,
-    Checkbox,
-    ListItemText,
+  List,
+  ListItem,
+  ListItemIcon,
+  Checkbox,
+  ListItemText,
 } from "@mui/material";
+import { toast } from "react-toastify";
 
 export default function TodoListView() {
-    const { getTodos, todos } = useViewModel();
+  const { getTodos, createTodo, onChangeValue, value, todos } = useViewModel();
 
-    useEffect(() => {
-        getTodos();
-    }, []);
+  useEffect(() => {
+    getTodos();
+  }, []);
 
-    return (
-        <List>
-            {todos.map((todo, i) => {
-                return (
-                    <ListItem key={i}>
-                        <ListItemIcon>
-                            <Checkbox checked={todo.isComplete} />
-                        </ListItemIcon>
-                        <ListItemText primary={todo.title} />
-                    </ListItem>
-                );
-            })}
-        </List>
-    );
+  return (
+    <List>
+      <input
+        onChange={onChangeValue}
+        placeholder="add your todo"
+        type="text"
+        value={value}
+      />
+      <button
+        onClick={
+            createTodo}
+      >
+        enviar
+      </button>
+      {todos.map((todo, i) => {
+        return (
+          <ListItem key={i}>
+            <ListItemIcon>
+              <Checkbox checked={todo.isComplete} />
+            </ListItemIcon>
+            <ListItemText primary={todo.title} />
+          </ListItem>
+        );
+      })}
+    </List>
+  );
 }
