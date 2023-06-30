@@ -1,25 +1,41 @@
 import { Todo } from "../../../Domain/Model/Todo";
 import TodoDataSource from "../TodoDataSource";
 import { TodoAPIEntity } from "./Entity/TodoAPIEntity";
-
-const BASE_URL = "https://jsonplaceholder.typicode.com";
-
-interface TypedResponse<T = any> extends Response {
-    json<P = T>(): Promise<P>;
-}
-
-function myFetch<T>(...args: any): Promise<TypedResponse<T>> {
-    return fetch.apply(window, args);
-}
+import localDB from "./LocalDB";
 
 export default class TodoAPIDataSourceImpl implements TodoDataSource {
-    async getTodos(): Promise<Todo[]> {
-        let response = await myFetch<TodoAPIEntity[]>(`${BASE_URL}/todos`);
-        let data = await response.json();
-        return data.map((item) => ({
-            id: item.id,
-            title: item.title,
-            isComplete: item.completed,
-        }));
-    }
+  db = localDB<TodoAPIEntity>("todos");
+  async createTodo(value: string) {
+    const res: Todo = {
+      id: new Date().getSeconds().toString(),
+      isComplete: false,
+      title: value,
+    };
+
+    this.db.create({
+      id: res.id,
+      is_completed: res.isComplete,
+      title: res.title,
+    });
+    return res;
+  }
+
+  async getTodos(): Promise<Todo[]> {
+    const data = this.db?.getAll();
+
+    return data?.map((item) => ({
+      id: item.id,
+      title: item.title,
+      isComplete: item.is_completed,
+    }));
+  }
+
+  async toggleTodoCheck(id: string) {
+    const item = this.db.updateByField(id, "is_completed", "toggle");
+    return item.is_completed;
+  }
+
+  async removeTodo(id: string) {
+    return this.db.removeById(id);
+  }
 }
