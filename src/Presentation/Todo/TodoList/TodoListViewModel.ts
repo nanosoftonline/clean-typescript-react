@@ -20,7 +20,6 @@ export default function TodoListViewModel() {
   const MarkAsReadUseCase = new MarkAsRead(todosRepositoryImpl);
   const RemoveTodosUseCase = new RemoveTodo(todosRepositoryImpl);
 
-
   function _resetValue() {
     setValue("");
   }
@@ -35,33 +34,34 @@ export default function TodoListViewModel() {
       setTodos((prev) => [...prev, createdTodo]);
       _resetValue();
     } catch (e) {
-        _resetValue();
-        if(e instanceof Error) {
-            toast(e.message);
-        }
+      _resetValue();
+      if (e instanceof Error) {
+        toast(e.message);
+      }
     }
   }
 
   async function toggleRead(id: string) {
-    const createdTodo = await RemoveTodosUseCase.invoke(id);
-    setTodos((prev) => [...prev.map((i) => {
-      const isToggled = i.id === id
+    const createdTodo = await MarkAsReadUseCase.invoke(id);
+    setTodos((prev) => [
+      ...prev.map((i) => {
+        const isToggled = i.id === id;
 
-      return {
-        ...i,
-        isComplete: isToggled ? createdTodo: i.isComplete
-      }
-    }) ]);
+        return {
+          ...i,
+          isComplete: isToggled ? createdTodo : i.isComplete,
+        };
+      }),
+    ]);
   }
-
 
   async function removeTodo(id: string) {
     const isRemoved = await RemoveTodosUseCase.invoke(id);
-   if(isRemoved) {
-    setTodos((prev) => {
-      return [...prev.filter(i => i.id !== id)];
-    })
-   }
+    if (isRemoved) {
+      setTodos((prev) => {
+        return [...prev.filter((i) => i.id !== id)];
+      });
+    }
   }
 
   function onChangeValue(e: React.ChangeEvent<HTMLInputElement>) {

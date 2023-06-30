@@ -28,10 +28,14 @@ function db<T>(table: string) {
         )!;
 
         if (idx > -1) {
-          setTable(JSON.stringify([...(allLocal() as any[]).filter((i) => i.id !== columnId)]));
-          return true
+          setTable(
+            JSON.stringify([
+              ...(allLocal() as any[]).filter((i) => i.id !== columnId),
+            ])
+          );
+          return true;
         }
-        return false
+        return false;
       },
 
       // db('todos').create({aoskdoqwkd})
@@ -52,7 +56,7 @@ function db<T>(table: string) {
 
         const stringified = JSON.stringify([
           ...(allLocal() as { id: string }[]).map((i) => {
-            const isChanged = i.id === columnId
+            const isChanged = i.id === columnId;
             return {
               ...i,
               ...(isChanged ? newItem : {}),
@@ -73,7 +77,7 @@ function db<T>(table: string) {
       return {} as T;
     },
     removeById(columnId: string) {
-      return false
+      return false;
     },
     create<T>(params: T) {},
     // update(id: string, newModel: Todo): Promise<Todo>

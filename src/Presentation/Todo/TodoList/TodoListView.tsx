@@ -7,10 +7,17 @@ import {
   Checkbox,
   ListItemText,
 } from "@mui/material";
-import { toast } from "react-toastify";
 
 export default function TodoListView() {
-  const { getTodos, createTodo, onChangeValue, toggleRead, removeTodo, value, todos } = useViewModel();
+  const {
+    getTodos,
+    createTodo,
+    onChangeValue,
+    toggleRead,
+    removeTodo,
+    value,
+    todos,
+  } = useViewModel();
 
   useEffect(() => {
     getTodos();
@@ -24,17 +31,15 @@ export default function TodoListView() {
         type="text"
         value={value}
       />
-      <button
-        onClick={
-            createTodo}
-      >
-        enviar
-      </button>
+      <button onClick={createTodo}>enviar</button>
       {todos.map((todo, i) => {
         return (
           <ListItem key={i}>
             <ListItemIcon>
-              <Checkbox checked={todo.isComplete} onChange={() => toggleRead(todo.id)}  />
+              <Checkbox
+                checked={todo.isComplete}
+                onChange={() => toggleRead(todo.id)}
+              />
             </ListItemIcon>
             <ListItemText primary={todo.title} />
             <button onClick={() => removeTodo(todo.id)}>remove</button>
@@ -44,4 +49,3 @@ export default function TodoListView() {
     </List>
   );
 }
- 

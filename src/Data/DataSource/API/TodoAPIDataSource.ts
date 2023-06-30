@@ -31,11 +31,11 @@ export default class TodoAPIDataSourceImpl implements TodoDataSource {
   }
 
   async markTodoAsRead(id: string) {
-    const item = this.db.updateByField(id, 'is_completed', 'toggle')
-    return item.is_completed
+    const item = this.db.updateByField(id, "is_completed", "toggle");
+    return item.is_completed;
   }
 
   async removeTodo(id: string) {
-    return this.db.removeById(id)
+    return this.db.removeById(id);
   }
 }
