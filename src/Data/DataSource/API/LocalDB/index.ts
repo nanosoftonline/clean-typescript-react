@@ -10,7 +10,6 @@ function db<T>(table: string) {
     const allLocal = () => JSON.parse(getTable()!);
 
     return {
-      // db('todos').getAll()
       getAll() {
         return allLocal() as T[];
       },
@@ -38,7 +37,6 @@ function db<T>(table: string) {
         return false;
       },
 
-      // db('todos').create({aoskdoqwkd})
       create<T>(params: T) {
         const stringified = JSON.stringify([...allLocal(), params]);
         setTable(stringified);
