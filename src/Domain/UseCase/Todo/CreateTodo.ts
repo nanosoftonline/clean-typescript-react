@@ -14,7 +14,7 @@ export class CreateTodo implements CreateTodosUseCase {
   async invoke(value: string) {
     if (value.length < 2) {
       throw new Error(
-        "You need to pass at leat 2 characters to create a todo."
+        "Your todo should have at leat 2 characters."
       );
     }
     const created = this.todoRepo.createTodo(value);

@@ -31,7 +31,7 @@ export default function TodoListView() {
         type="text"
         value={value}
       />
-      <button onClick={createTodo}>enviar</button>
+      <button onClick={createTodo}>add</button>
       {todos.map((todo, i) => {
         return (
           <ListItem key={i}>

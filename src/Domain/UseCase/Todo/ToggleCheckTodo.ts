@@ -1,10 +1,10 @@
 import { TodoRepository } from "../../Repository/TodoRepository";
 
-export interface MarkAsReadUseCase {
+export interface ToggleCheckTodoUseCase {
   invoke: (id: string) => Promise<boolean>;
 }
 
-export class MarkAsRead implements MarkAsReadUseCase {
+export class ToggleCheckTodo implements ToggleCheckTodoUseCase {
   private todoRepo: TodoRepository;
   constructor(_todoRepo: TodoRepository) {
     this.todoRepo = _todoRepo;

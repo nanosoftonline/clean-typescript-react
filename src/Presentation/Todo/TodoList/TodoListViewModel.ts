@@ -4,9 +4,9 @@ import { TodoRepositoryImpl } from "../../../Data/Repository/TodoRepositoryImpl"
 import { Todo } from "../../../Domain/Model/Todo";
 import { GetTodos } from "../../../Domain/UseCase/Todo/GetTodos";
 import { CreateTodo } from "../../../Domain/UseCase/Todo/CreateTodo";
-import { toast } from "react-toastify";
-import { MarkAsRead } from "../../../Domain/UseCase/Todo/MarkAsRead";
+import { ToggleCheckTodo } from "../../../Domain/UseCase/Todo/ToggleCheckTodo";
 import { RemoveTodo } from "../../../Domain/UseCase/Todo/RemoveTodo";
+import { toast } from "react-toastify";
 
 export default function TodoListViewModel() {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -15,22 +15,22 @@ export default function TodoListViewModel() {
   const todosDataSourceImpl = new TodoAPIDataSourceImpl();
   const todosRepositoryImpl = new TodoRepositoryImpl(todosDataSourceImpl);
 
-  const GetTodosUseCase = new GetTodos(todosRepositoryImpl);
-  const CreateTodosUseCase = new CreateTodo(todosRepositoryImpl);
-  const MarkAsReadUseCase = new MarkAsRead(todosRepositoryImpl);
-  const RemoveTodosUseCase = new RemoveTodo(todosRepositoryImpl);
+  const getTodosUseCase = new GetTodos(todosRepositoryImpl);
+  const createTodosUseCase = new CreateTodo(todosRepositoryImpl);
+  const toggleCheckTodoUseCase = new ToggleCheckTodo(todosRepositoryImpl);
+  const removeTodosUseCase = new RemoveTodo(todosRepositoryImpl);
 
   function _resetValue() {
     setValue("");
   }
 
   async function getTodos() {
-    setTodos(await GetTodosUseCase.invoke());
+    setTodos(await getTodosUseCase.invoke());
   }
 
   async function createTodo() {
     try {
-      const createdTodo = await CreateTodosUseCase.invoke(value);
+      const createdTodo = await createTodosUseCase.invoke(value);
       setTodos((prev) => [...prev, createdTodo]);
       _resetValue();
     } catch (e) {
@@ -42,7 +42,7 @@ export default function TodoListViewModel() {
   }
 
   async function toggleRead(id: string) {
-    const createdTodo = await MarkAsReadUseCase.invoke(id);
+    const createdTodo = await toggleCheckTodoUseCase.invoke(id);
     setTodos((prev) => [
       ...prev.map((i) => {
         const isToggled = i.id === id;
@@ -56,7 +56,7 @@ export default function TodoListViewModel() {
   }
 
   async function removeTodo(id: string) {
-    const isRemoved = await RemoveTodosUseCase.invoke(id);
+    const isRemoved = await removeTodosUseCase.invoke(id);
     if (isRemoved) {
       setTodos((prev) => {
         return [...prev.filter((i) => i.id !== id)];
